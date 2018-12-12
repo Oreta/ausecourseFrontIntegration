@@ -1,0 +1,57 @@
+
+
+<div class="container border" style="margin-top: 40px; ">
+  <mat-grid-list cols="2" rowHeight="3:2">
+    <mat-grid-tile>
+
+      <form (ngSubmit)="onAddProduct()">
+        <h3>creez votre liste ici !</h3>
+        <br>
+        <mat-form-field>
+          <input matInput [(ngModel)]="name" name="name" placeholder="produit">
+        </mat-form-field> 
+        <br>
+        <mat-form-field>
+          <input matInput [(ngModel)]="qty" name="qty" placeholder="quantité">
+        </mat-form-field> 
+        <br>
+        <button mat-button type="submit" value="Submit">Ajouter</button>
+        <button mat-button routerLink="/livreurs">checkout</button>
+
+      </form>    
+
+    </mat-grid-tile>
+
+    <mat-grid-tile>
+        <div>
+
+          <h3>Liste des courses</h3>
+          <br>
+
+          <table border="1">
+            <thead>
+            <tr>
+              <th>Produit</th>
+              <th>Quantite</th>   
+            </tr>
+            </thead>
+
+            <tbody *ngFor="let item of listaux">
+            <tr>
+              <td>{{item.nom}}</td>
+              <td>{{item.prix}}</td>
+            </tr>
+            </tbody>
+          </table>
+
+        </div>
+     
+    </mat-grid-tile>
+
+  </mat-grid-list>
+
+</div>
+
+
+
+

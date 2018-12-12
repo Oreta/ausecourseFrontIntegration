@@ -1,0 +1,15 @@
+<div class="container border" style="margin-top: 40px; width: 30%;">
+	<h3> Vos commandes et leur etat ! </h3> <br> 
+
+	<mat-nav-list>
+	  <mat-list-item *ngFor="let order of orders">
+	     <a matLine>{{order.id}}</a>
+	     <button mat-icon-button>
+	        <mat-icon>{{order.orderState}}</mat-icon>
+	     </button>
+	  </mat-list-item>
+	</mat-nav-list>	
+
+
+
+</div>

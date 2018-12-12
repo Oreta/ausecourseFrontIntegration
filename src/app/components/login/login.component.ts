@@ -13,7 +13,7 @@ import {Http} from '@angular/http';
 })
 export class LoginComponent implements OnInit {
 
-	private serverPath = "http://127.0.0.1:8080" ;
+	private serverPath = "https://ausecourse.herokuapp.com/" ;
 	private loginError: boolean = false;
 	private loggedIn = false ;
 	private credential = {'username' : '', 'password' : '' } ;
@@ -30,6 +30,10 @@ export class LoginComponent implements OnInit {
 	private emailNotExists:boolean = false ;
 	private forgetPasswordEmailSent:boolean ;
 	private recoverEmail:string ;
+	private mode : string ;
+
+	private addressLivraison : string ;
+	private telephone : number ;
 
 
  	constructor(
@@ -65,7 +69,7 @@ export class LoginComponent implements OnInit {
 		if(this.password != this.passwordConfirmation)
 			this.passwordNotMaching = true ;
 
-		this.userService.newUser(this.username, this.email, this.password).subscribe(
+		this.userService.newUser(this.username, this.email, this.password, this.mode, this.addressLivraison, this.telephone).subscribe(
 			res => {
 				console.log(res);
 				this.emailSent = true;

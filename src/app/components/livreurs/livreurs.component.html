@@ -1,0 +1,13 @@
+<div class="container border" style="margin-top: 40px; width: 50%;">
+
+<h3> Choisissez un livreur autour de vous :</h3> <br>
+<mat-nav-list>
+  <mat-list-item *ngFor="let livreur of livreurs">
+     <a matLine (click)="onNotifyLivreur(livreur)">{{ livreur.username }}</a>
+     <button mat-icon-button>
+        <mat-icon>infos</mat-icon>
+     </button>
+  </mat-list-item>
+</mat-nav-list>
+
+

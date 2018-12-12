@@ -4,45 +4,53 @@ import { HttpHeaders, HttpParams } from '@angular/common/http';
 import {AppConst} from '../constants/app-const' ; 
 import {Product} from '../models/product' ; 
 import {CookieService} from 'angular2-cookie/core';
+import {ListeCourse} from '../models/ListeCourse'; 
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
 
-  constructor(private http : HttpClient,
+  constructor(private http : HttpClient, 
   	private cookieService : CookieService) { }
-/*
-  	createFavorites() {
-		let url = this.serverPath+ "movie/createFavoritesMoviesList";
-		let tokenHeader = new HttpHeaders({
-			'Content-Type' : 'application/json',
-		});
-		let infos = {
-			"id": movie.id,
-			"title" : movie.title, 
-			"MoviesListId" : this.cookieService.get("MoviesListId")
-  		}
 
-		return this.http.post(url, JSON.stringify(infos), {headers : tokenHeader,responseType:'text'});		
-
-		return this.http.get<string>(url,{headers: tokenHeader}); 	
-	}
-*/
 
 	getProductList() {
-		let url = AppConst.serverPath+"product/getProductsList";
-		return this.http.get<Product[]>(url) ;
-
+		let url = AppConst.serverPath+"ListeCourse/getById";
+		//let params = new HttpParams(); 
+		return this.http.post(url,this.cookieService.get("listId")) ;
 	}
 
 	addToShoppingList(product: Product) {
-		let url = AppConst.serverPath+"product/getProductsList";
-		let infos = {
-			"productId": product.id,
-			"listId" : this.cookieService.get("listId")
-  		}
-  		return this.http.post(url, JSON.stringify(infos), {responseType:'text'});		
+		let url = AppConst.serverPath+"ListeCourse/addToShoppingList";
+  		return this.http.post(url, product);		
 		
 	}
+
+	save(listeCourse : ListeCourse) {
+		let url = AppConst.serverPath+"ListeCourse/save";
+		let tokenHeader = new HttpHeaders({
+			'Content-Type' : 'application/json',
+			'x-auth-token' : localStorage.getItem('xAuthToken')
+		});		
+
+		return this.http.post(url, listeCourse,{headers : tokenHeader, responseType:'text'});
+	}
+
+	addProduct(name : string, qty:number) {
+		let url = AppConst.serverPath+"ListeCourse/addToList";
+		let tokenHeader = new HttpHeaders({
+			'Content-Type' : 'application/json',
+			'x-auth-token' : localStorage.getItem('xAuthToken')
+		});		
+		let info = {
+			"listId" : this.cookieService.get("listId"),
+			"name" : name,
+			"qty" : qty
+		}		
+
+		return this.http.post(url, JSON.stringify(info),{headers : tokenHeader, responseType:'text'});
+	}	
 }
+
+

@@ -1,5 +1,5 @@
 export class User {
-	public id:number ;
+	public id:string ;
 	public username:string;
 	public password:string ;
 	public email:string;
@@ -7,4 +7,6 @@ export class User {
 	public numeroRoad:number;
 	public Road:string;
 	public tel:number;
+	public client : boolean ; 
+	public deliverer : boolean ;
 }

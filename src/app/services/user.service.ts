@@ -1,63 +1,67 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders, HttpParams } from '@angular/common/http';
-import {Http, Headers} from '@angular/http'; 
-import {Observable} from 'rxjs/Observable' ; 
-import {Router} from '@angular/router' ; 
-import {User} from '../models/user' ; 
+import {Http, Headers} from '@angular/http';
+import {Observable} from 'rxjs/Observable' ;
+import {Router} from '@angular/router' ;
+import {User} from '../models/user' ;
 import {AppConst} from '../constants/app-const' ;
-
+import {Order} from '../models/order';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-	private serverPath: string = "http://127.0.0.1:8080" ; 
+	private serverPath: string = "https://ausecourse.herokuapp.com/" ;
 
 	constructor(private http: Http, private router:Router,
-		private httpClient : HttpClient) { } 
+		private httpClient : HttpClient) { }
 
 	sendCredential(username: string , password: string){
-		let url = this.serverPath+"/token"; 
+		let url = this.serverPath+"/token";
 
-		let encodeCredentials = btoa(username+":"+password) ; 
-		let basicHeader = "Basic " + encodeCredentials ; 
+		let encodeCredentials = btoa(username+":"+password) ;
+		let basicHeader = "Basic " + encodeCredentials ;
 		let headers = new Headers ({
-			'Content-Type' : 'application/x-www-form-urlencoded', 
+			'Content-Type' : 'application/x-www-form-urlencoded',
 			'Authorization' : basicHeader
 		});
 
-		
-		return this.http.get(url,{headers: headers}); 
+
+		return this.http.get(url,{headers: headers});
 	}
 
 
 	checkSession(){
-		let url = this.serverPath+"/checkSession"; 
+		let url = this.serverPath+"/checkSession";
 		console.log("xAuthToken hah: " + localStorage.getItem('xAuthToken'));
 		let headers = new Headers ({
 		'x-auth-token' : localStorage.getItem('xAuthToken')
 		});
-		return this.http.get(url,{headers: headers}); 
+		return this.http.get(url,{headers: headers});
 	}
 
 	logout(){
-		let url = this.serverPath+"/user/logout"; 
+		let url = this.serverPath+"/user/logout";
 		let headers = new Headers ({
 		'x-auth-token' : localStorage.getItem('xAuthToken')
 		});
-		return this.http.post(url,'',{headers: headers}); 
+		return this.http.post(url,'',{headers: headers});
 	}
 
 
 
-	newUser(username: string, email:string, password: string) {
+	newUser(username: string, email:string, password: string, mode :string, addressLivraison:string, telephone:number) {
+		console.log("mode  " + mode);
 		let url = this.serverPath+'/user/newUser';
 		let userInfo = {
 			"username" : username,
 			"email" : email,
-			"password" : password
+			"password" : password,
+			"mode" : mode ,
+			"addressLivraison" : addressLivraison ,
+			"telephone" : telephone
 		}
 		let tokenHeader = new Headers({
 			'Content-Type' : 'application/json',
@@ -112,8 +116,51 @@ export class UserService {
 
 	createShoppingList(user : User) {
 		let url = AppConst.serverPath+"user/createShoppingList";
-  		return this.httpClient.post(url, user.id, {responseType:'text'});		
+  		return this.httpClient.post(url, user.id, {responseType:'text'});
 
 	}
 
+	getAvailableLivreurs(user: User){
+		let url = AppConst.serverPath+"user/getLivreurs";
+		return this.httpClient.get(url) ;
+	}
+
+	getAllOrders(user:User){
+		let url = AppConst.serverPath+"order/getAllByIdClient";
+		return this.httpClient.post(url,user.id);
+	}
+
+	notifyLivreur(order: Order){
+		let url = this.serverPath+'/user/notifyLivreur';
+
+		let tokenHeader = new Headers({
+			'Content-Type' : 'application/json',
+			'x-auth-token' : localStorage.getItem('xAuthToken')
+		});
+
+		return this.http.post(url, order, {headers : tokenHeader});
+	}
+
+	getNotifications(id : string){
+		let url = this.serverPath+'/user/getNotification';
+
+		let tokenHeader = new Headers({
+			'Content-Type' : 'application/json',
+			'x-auth-token' : localStorage.getItem('xAuthToken')
+		});
+
+		return this.http.post(url, id, {headers : tokenHeader});
+
+	}
+
+	getUserById(userId : string){
+		let url = this.serverPath+'/user/getUserById';
+
+		let tokenHeader = new Headers({
+			'Content-Type' : 'application/json',
+			'x-auth-token' : localStorage.getItem('xAuthToken')
+		});
+
+		return this.http.post(url, userId, {headers : tokenHeader});
+	}
 }
